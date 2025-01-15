@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Microsoft.AspNetCore.StaticFiles;
+
 namespace CityInfo;
 
 public class Program
@@ -6,16 +9,18 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddControllers(options =>
+        {
+            // returns 406 Not Acceptable error if the client requests for other format than JSON (default).
+            options.ReturnHttpNotAcceptable = true;
+        }).AddNewtonsoftJson();
+  
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
         var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
+        
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -25,8 +30,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
-
+        
         app.MapControllers();
 
         app.Run();
