@@ -1,13 +1,12 @@
-﻿using CityInfo.Models;
+﻿using CityInfo.API.Models;
 
-namespace CityInfo.Data;
+namespace CityInfo.API.Data;
 
 public class CitiesDataStore
 {
     public List<CityDto> Cities { get; private set; } = [];
-    public static CitiesDataStore Current { get; } = new CitiesDataStore();
     
-    private CitiesDataStore()
+    public CitiesDataStore()
     {
         LoadCities();
     }

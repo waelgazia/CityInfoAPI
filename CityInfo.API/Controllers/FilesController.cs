@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace CityInfo.Controllers;
+namespace CityInfo.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -26,7 +26,7 @@ public class FilesController : ControllerBase
         }
         
         // Determine the file content type
-        if (!_fileExtensionContentTypeProvider.TryGetContentType(pathToFile, out string fileContentType))
+        if (!_fileExtensionContentTypeProvider.TryGetContentType(pathToFile, out string? fileContentType))
         {
             fileContentType = "application/octet-stream";
         }
