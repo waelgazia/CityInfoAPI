@@ -25,10 +25,13 @@ public class Program
         
         builder.Services.AddSingleton<CitiesDataStore>();
         builder.Services.AddDbContext<AppDbContext>();
+        builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
         
         builder.Services.AddTransient<IMailService, LocalMailService>();
         builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        
         var app = builder.Build();
 
         // To globally handle exception in production,
