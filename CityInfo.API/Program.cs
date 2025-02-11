@@ -24,6 +24,8 @@ public class Program
         builder.Services.AddSwaggerGen();
         
         builder.Services.AddSingleton<CitiesDataStore>();
+        builder.Services.AddDbContext<AppDbContext>();
+        
         builder.Services.AddTransient<IMailService, LocalMailService>();
         builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
