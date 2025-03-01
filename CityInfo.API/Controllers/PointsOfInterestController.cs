@@ -6,9 +6,11 @@ using AutoMapper;
 using CityInfo.API.Models;
 using CityInfo.API.Services;
 using CityInfo.API.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CityInfo.API.Controllers;
 
+[Authorize] /* to enforce authentication to access the controller */
 [ApiController]
 [Route("api/cities/{cityId}/[controller]")]
 public class PointsOfInterestController : ControllerBase

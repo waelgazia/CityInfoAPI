@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using CityInfo.API.Data;
 using CityInfo.API.Services;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.OpenApi.Models;
 
 namespace CityInfo.API;
 
@@ -11,11 +13,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers(options =>
-        {
-            // returns 406 Not Acceptable error if the client requests for other format than JSON (default).
-            options.ReturnHttpNotAcceptable = true;
-        }).AddNewtonsoftJson();
+        builder.Services.AddControllers().AddNewtonsoftJson();
         
         // to return a formatted message in exception.
         builder.Services.AddProblemDetails(); 
@@ -31,6 +29,35 @@ public class Program
         builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new()
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                ValidAudience = builder.Configuration["Authentication:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+            };
+        });
+        
+        builder.Services.AddAuthorization(options => 
+        {
+            options.AddPolicy("MustBeFromParis", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim("city", "Paris");
+            });
+        });
+        
+        builder.Services.AddApiVersioning(setupAction => 
+        {
+            setupAction.ReportApiVersions = true;
+            setupAction.AssumeDefaultVersionWhenUnspecified = true;
+            setupAction.DefaultApiVersion = new Asp.Versioning.ApiVersion(1,0);
+        }).AddMvc();
         
         var app = builder.Build();
 
@@ -49,6 +76,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication(); /* important for JWT authentication */
+        
         app.UseAuthorization();
         
         app.MapControllers();
