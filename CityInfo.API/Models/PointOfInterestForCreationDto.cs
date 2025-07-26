@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CityInfo.API.Profiles;
-using CityInfo.API.Data.Entities;
-
 namespace CityInfo.API.Models;
 
-public class PointOfInterestForCreationDto : IMapFrom<PointOfInterest>
+public class PointOfInterestForCreationDto
 {
     [MaxLength(50)]
     [Required(ErrorMessage = "You should provide a name value!")]

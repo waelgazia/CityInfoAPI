@@ -1,9 +1,6 @@
-﻿using CityInfo.API.Profiles;
-using CityInfo.API.Data.Entities;
+﻿namespace CityInfo.API.Models;
 
-namespace CityInfo.API.Models;
-
-public class CityDto : IMapFrom<City>
+public class CityDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
