@@ -1,6 +1,9 @@
-﻿namespace CityInfo.API.Models;
+﻿using CityInfo.API.Profiles;
+using CityInfo.API.Data.Entities;
 
-public class PointOfInterestDto
+namespace CityInfo.API.Models;
+
+public class PointOfInterestDto : IMapFrom<PointOfInterest>
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
